@@ -1,17 +1,17 @@
 This repo is an example of a working **.NET Console App** that uses [Stream Unity SDK](https://github.com/GetStream/stream-chat-unity).
 
 
-#Please note that from the whole SDK package only 2 folders are essential:
+## Please note that from the whole SDK package only 2 folders are essential:
 - **StreamChat.Core** - main logic of the SDK, contains no dependencies of the **UnityEngine**
 - **StreamChat.Libs** - Core dependencies
 
 
-#In order to run the SDK wihout UnityEngine you need to:
+## In order to run the SDK wihout UnityEngine you need to:
 1. Remove Unity implementations from the **StreamChat.Libs**
 2. Provide new platform specific implementations
 
 
-#Steps taken:
+## Steps taken:
 1. Create .NET Console Application
 2. Copy StreamChat.Core & StreamChat.Libs into the project & Include them in the solution
 3. Import Newtonsoft.Json via NuGet
