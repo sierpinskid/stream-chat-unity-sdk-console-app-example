@@ -499,6 +499,7 @@
         <Compile Include="Plugins\StreamChat\Libs\Websockets\WebsocketClient.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="StreamChatService.cs" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="Plugins\StreamChat\Core\API.meta" />
