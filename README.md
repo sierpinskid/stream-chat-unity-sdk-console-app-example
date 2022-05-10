@@ -9,9 +9,9 @@ var authCredentials = new AuthCredentials(
     userToken: "");
 ```
 
-**API_KEY** - get it from [Stream's Dashboard](https://dashboard.getstream.io/)
-**USER_ID** - for the purpose of testing you can create a test user through Dashboards Chat Explorer
-**USER_TOKEN** - for the purpose of testing you can create token with our [online token generator](https://getstream.io/chat/docs/unity/tokens_and_authentication/?language=unity#manually-generating-tokens)
+- **API_KEY** - get it from [Stream's Dashboard](https://dashboard.getstream.io/)
+- **USER_ID** - for the purpose of testing you can create a test user through Dashboards Chat Explorer
+- **USER_TOKEN** - for the purpose of testing you can create token with our [online token generator](https://getstream.io/chat/docs/unity/tokens_and_authentication/?language=unity#manually-generating-tokens)
 
 For a more robust testing checkout how to enable [Developer's Tokens](https://getstream.io/chat/docs/unity/tokens_and_authentication/?language=unity#developer-tokens)
 
