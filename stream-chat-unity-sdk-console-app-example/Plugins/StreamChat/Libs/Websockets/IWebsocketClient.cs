@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace StreamChat.Libs.Websockets
@@ -9,14 +10,17 @@ namespace StreamChat.Libs.Websockets
     public interface IWebsocketClient : IDisposable
     {
         event Action Connected;
+        event Action Disconnected;
         event Action ConnectionFailed;
-
-        bool IsRunning { get; }
 
         bool TryDequeueMessage(out string message);
 
         Task ConnectAsync(Uri serverUri);
 
-        Task Send(string message);
+        void Update();
+
+        void Send(string message);
+
+        Task DisconnectAsync(WebSocketCloseStatus closeStatus, string closeMessage);
     }
 }

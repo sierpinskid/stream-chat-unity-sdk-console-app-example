@@ -1,7 +1,7 @@
 ﻿using System;
 using StreamChat.Libs.Auth;
 
-namespace ToDeleteTestStreamSDKInConsole
+namespace StreamSDKInConsole
 {
     internal class Program
     {
@@ -13,9 +13,9 @@ namespace ToDeleteTestStreamSDKInConsole
             try
             {
                 var authCredentials = new AuthCredentials(
-                    apiKey: "",
-                    userId: "",
-                    userToken: "");
+                    apiKey: "wtnrddkt5tt2",
+                    userId: "songoku-admin",
+                    userToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic29uZ29rdS1hZG1pbiJ9.ce_hSKcRCcP6Wa1M_Nam2CJp5oqq4eDcFcSvnjpBcRQ");
 
                 if (authCredentials.IsAnyEmpty())
                 {
@@ -29,18 +29,7 @@ namespace ToDeleteTestStreamSDKInConsole
 
                 while (_isRunning)
                 {
-                    var currentTimestampMs = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-
-                    if (currentTimestampMs < _nextFrameTimestampMs)
-                    {
-                        continue;
-                    }
-
-                    var deltaTime = (currentTimestampMs - _lastFrameTimestampMs) / 1000;
-                    _streamChatService.Update((float)deltaTime);
-
-                    _lastFrameTimestampMs = currentTimestampMs;
-                    _nextFrameTimestampMs = _lastFrameTimestampMs + MsPerFrame;
+                    _streamChatService.Update();
                 }
             }
             catch (Exception e)
@@ -50,14 +39,10 @@ namespace ToDeleteTestStreamSDKInConsole
             }
         }
 
-        private const float FrameRate = 30;
-        private const float MsPerFrame = 1000 / 30f;
 
         private static StreamChatService _streamChatService;
 
         private static bool _isRunning;
-        private static double _lastFrameTimestampMs;
-        private static double _nextFrameTimestampMs;
 
         private static void OnProcessExit(object sender, EventArgs e)
         {

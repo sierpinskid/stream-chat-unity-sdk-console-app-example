@@ -1,41 +1,45 @@
 ﻿using System;
 using System.Threading.Tasks;
 using StreamChat.Core;
-using StreamChat.Core.Models;
-using StreamChat.Core.Requests;
+using StreamChat.Core.StatefulModels;
 using StreamChat.Libs.Auth;
+using StreamChat.Libs.Utils;
 
-namespace ToDeleteTestStreamSDKInConsole
+namespace StreamSDKInConsole
 {
     public class StreamChatService : IDisposable
     {
         public StreamChatService(AuthCredentials authCredentials)
         {
-            _client = StreamChatClient.CreateDefaultClient(authCredentials);
+            _client = StreamChatClient.CreateDefaultClient();
             _client.Connected += OnClientConnected;
-            _client.Connect();
+            _client.ConnectUserAsync(authCredentials).LogIfFailed();
 
             Console.WriteLine("Client created. Attempt to connect.");
         }
 
-        public void Update(float deltaTime)
+        public void Update()
         {
-            _client.Update(deltaTime);
+            _client.Update();
         }
 
         public void Dispose()
         {
-            _client?.Dispose();
+            _client.Connected -= OnClientConnected;
+            _client.Dispose();
         }
 
-        private const string ChannelType = "messaging";
+        // Channel can be referenced by ID or by a unique combination of members
+        // e.g. private msg between 2 members will always point to the same channel
         private const string ChannelId = "main-chat-id";
-
+        
         private readonly IStreamChatClient _client;
 
-        private void OnClientConnected()
+        private IStreamChannel _activeChannel;
+
+        private void OnClientConnected(IStreamLocalUserData localUserData)
         {
-            Console.WriteLine("Client Connected.");
+            Console.WriteLine("Client Connected. Local user: " + localUserData.User.Id);
 
             TestServiceAsync()
                 .ContinueWith(_ => Console.WriteLine(_.Exception), TaskContinuationOptions.OnlyOnFaulted);
@@ -46,6 +50,8 @@ namespace ToDeleteTestStreamSDKInConsole
         /// </summary>
         private async Task TestServiceAsync()
         {
+            _activeChannel = await GetChannel();
+            
             var rnd = new Random();
 
             var randomNumber = rnd.Next();
@@ -55,25 +61,17 @@ namespace ToDeleteTestStreamSDKInConsole
             randomNumber = rnd.Next();
             Console.WriteLine("Send test message with a random number: " + randomNumber);
             await SendNewMessageAsync(randomNumber.ToString());
-
-            var channelState = await FetchLatestMessagesAsync();
-
-            PrintMessages(channelState);
+            
+            PrintMessages();
         }
 
-        private async Task SendNewMessageAsync(string message)
+        private async Task SendNewMessageAsync(string messageText)
         {
             try
             {
-                var response = await _client.MessageApi.SendNewMessageAsync(ChannelType, ChannelId, new SendMessageRequest
-                {
-                    Message = new MessageRequest
-                    {
-                        Text = message
-                    }
-                });
+                var message = await _activeChannel.SendNewMessageAsync(messageText);
 
-                Console.WriteLine($"Message: `{response.Message.Text}` sent successfully");
+                Console.WriteLine($"Message: `{message.Text}` sent successfully");
             }
             catch (Exception e)
             {
@@ -81,16 +79,11 @@ namespace ToDeleteTestStreamSDKInConsole
             }
         }
 
-        private async Task<ChannelState> FetchLatestMessagesAsync()
+        private async Task<IStreamChannel> GetChannel()
         {
             try
             {
-                return await _client.ChannelApi.GetOrCreateChannelAsync(ChannelType, ChannelId,
-                    new ChannelGetOrCreateRequest
-                    {
-                        State = true,
-                        Watch = true,
-                    });
+                return await _client.GetOrCreateChannelWithIdAsync(ChannelType.Messaging, ChannelId);
             }
             catch (Exception e)
             {
@@ -99,10 +92,10 @@ namespace ToDeleteTestStreamSDKInConsole
             }
         }
 
-        private void PrintMessages(ChannelState channelState)
+        private void PrintMessages()
         {
-            Console.WriteLine($"Channel: `{channelState.Channel.Name}` last messages:");
-            foreach (var msg in channelState.Messages)
+            Console.WriteLine($"Channel: `{_activeChannel.Name}` last messages:");
+            foreach (var msg in _activeChannel.Messages)
             {
                 Console.WriteLine($"{msg.Text}");
                 Console.WriteLine($"Author: {msg.User.Id}");
