@@ -13,9 +13,9 @@ namespace StreamSDKInConsole
             try
             {
                 var authCredentials = new AuthCredentials(
-                    apiKey: "wtnrddkt5tt2",
-                    userId: "songoku-admin",
-                    userToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic29uZ29rdS1hZG1pbiJ9.ce_hSKcRCcP6Wa1M_Nam2CJp5oqq4eDcFcSvnjpBcRQ");
+                    apiKey: "",
+                    userId: "",
+                    userToken: "");
 
                 if (authCredentials.IsAnyEmpty())
                 {
