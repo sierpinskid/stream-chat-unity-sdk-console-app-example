@@ -1,4 +1,9 @@
+# Stream Chat SDK for .NET
 This repo is an example of a working **.NET Console App** that uses [Stream Unity SDK](https://github.com/GetStream/stream-chat-unity) v4.1.0.
+
+## Applications
+- .NET apps
+- .NET MAUI apps
 
 ## How to run?
 Open Program.cs and enter your: **API_KEY**, **USER_ID** and **USER_TOKEN** in the top of the file:
